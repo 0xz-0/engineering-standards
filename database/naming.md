@@ -38,8 +38,12 @@
 | `_code` | 编码，通常用于枚举或分类，不可变 | 字符串 | `country_code`, `category_code` |
 | `_type` | 类型分类，区分同一实体下的子类 | 字符串（TEXT 枚举） | `payment_type`, `user_type` |
 | `_status` | 状态，生命周期阶段，通常有状态机驱动 | 字符串（TEXT 枚举） | `order_status`, `shipment_status` |
-| `_cents` | 金额（单位：分） | 大整数 | `total_cents`, `unit_price_cents` |
+| `_cents` | 金额（单位：分，仅限固定两位小数的单一/已知币种场景） | 大整数 | `total_cents`, `unit_price_cents` |
+| `_minor` | 金额（该货币最小货币单位，多币种场景专用，需配合 `currency_code` + `currency_exponent` 换算，见[表设计规范 2.2](table-design.md#22-多币种例外commerce-multi-currency-exceptionmay)） | 大整数 | `amount_minor` |
+| `_exponent` | 小数位指数（如 ISO 4217 币种指数） | 整数 | `currency_exponent` |
 | `_at` | 时间点 | 时间戳 | `paid_at`, `shipped_at`, `canceled_at` |
+
+**字段前缀 `provider_`**：表示该字段为第三方/上游渠道返回的原始值快照，仅用于对账溯源，**禁止**作为业务计算或展示依据（示例：`provider_amount_milliunits`，见[表设计规范 2.2](table-design.md#22-多币种例外commerce-multi-currency-exceptionmay)）。
 
 ## 4. 逻辑外键命名
 
